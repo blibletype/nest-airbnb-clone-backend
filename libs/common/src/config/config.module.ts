@@ -8,7 +8,6 @@ import * as Joi from 'joi';
 @Module({
   imports: [
     NestConfigModule.forRoot({
-      envFilePath: `${process.env.NODE_ENV}.env`,
       validationSchema: Joi.object({
         MONGODB_URI: Joi.string().required(),
       }),
