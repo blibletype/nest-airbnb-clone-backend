@@ -7,6 +7,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import * as Joi from 'joi';
 import { join } from 'path';
+import { LocalStrategy } from './strategies/local.strategy';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { join } from 'path';
         MONGODB_URI: Joi.string().required(),
         JWT_SECRET: Joi.string().required(),
         JWT_EXPIRATION: Joi.string().required(),
+        PORT: Joi.number().required(),
       }),
     }),
     JwtModule.registerAsync({
@@ -32,6 +34,6 @@ import { join } from 'path';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, LocalStrategy],
 })
 export class AuthModule {}
