@@ -9,7 +9,6 @@ export class AuthService {
   public async getTokenForUser(user: UserDocument): Promise<string> {
     return this.jwtService.sign({
       userId: user._id,
-      email: user.email,
     });
   }
 }
