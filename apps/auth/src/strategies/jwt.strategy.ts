@@ -4,6 +4,8 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { UsersService } from '../users/users.service';
 import { TokenPayload } from '../interfaces/token-payload.interface';
+import { Request } from 'express';
+import { UserDocument } from '../users/models/user.schema';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -12,13 +14,14 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     private readonly usersService: UsersService,
   ) {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      ignoreExpiration: false,
+      jwtFromRequest: ExtractJwt.fromExtractors([
+        (request: Request) => request?.cookies?.Authentication,
+      ]),
       secretOrKey: configService.get('JWT_SECRET'),
     });
   }
 
-  async validate({ userId }: TokenPayload) {
+  async validate({ userId }: TokenPayload): Promise<UserDocument> {
     return await this.usersService.getUser({ _id: userId });
   }
 }
